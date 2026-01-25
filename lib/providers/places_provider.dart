@@ -7,6 +7,10 @@ class PlacesNotifier extends StateNotifier<List<Place>> {
         const Place(id: '1', tilte: 'Office'),
         const Place(id: '2', tilte: 'Gym'),
       ]);
+
+  void addNewPlace(Place place) {
+    state = [...state, place];
+  }
 }
 
 final placesProvider = StateNotifierProvider<PlacesNotifier, List<Place>>((

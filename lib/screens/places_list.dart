@@ -1,5 +1,6 @@
 import 'package:favorite_places/models/place.dart';
 import 'package:favorite_places/providers/places_provider.dart';
+import 'package:favorite_places/screens/add_new_place.dart';
 import 'package:favorite_places/screens/place_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -52,7 +53,13 @@ class PlacesScreenList extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(
+                  context,
+                ).push(
+                  MaterialPageRoute(builder: (ctx) => AddNewPlace()),
+                );
+              },
               icon: const Icon(
                 Icons.add,
               ),
