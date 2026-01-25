@@ -1,5 +1,6 @@
 import 'package:favorite_places/models/place.dart';
 import 'package:favorite_places/providers/places_provider.dart';
+import 'package:favorite_places/screens/place_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -25,9 +26,19 @@ class PlacesScreenList extends ConsumerWidget {
       content = ListView.builder(
         itemBuilder: (context, index) {
           return ListTile(
+            key: ValueKey(allPlaces[index].id),
             title: Text(
               allPlaces[index].tilte,
             ),
+            onTap: () => {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (ctx) => PlaceDetailsScreen(
+                    place: allPlaces[index],
+                  ),
+                ),
+              ),
+            },
           );
         },
         itemCount: allPlaces.length,

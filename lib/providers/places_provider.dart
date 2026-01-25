@@ -1,10 +1,6 @@
 import 'package:favorite_places/models/place.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// final placesProvider = Provider((ref) {
-//   return dummyPlaces;
-// });
-
 class PlacesNotifier extends StateNotifier<List<Place>> {
   PlacesNotifier()
     : super([
