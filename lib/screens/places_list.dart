@@ -1,3 +1,5 @@
+import 'package:favorite_places/models/place.dart';
+import 'package:favorite_places/providers/places_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -6,6 +8,7 @@ class PlacesScreenList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    List<Place> allPlaces = ref.watch(placesProvider);
     Widget content = Center(
       child: Container(
         padding: const EdgeInsets.only(bottom: 50),
@@ -17,6 +20,19 @@ class PlacesScreenList extends ConsumerWidget {
         ),
       ),
     );
+
+    if (allPlaces.isNotEmpty) {
+      content = ListView.builder(
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(
+              allPlaces[index].tilte,
+            ),
+          );
+        },
+        itemCount: allPlaces.length,
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Places'),
