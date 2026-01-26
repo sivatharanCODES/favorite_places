@@ -1,34 +1,34 @@
-import 'package:favorite_places/models/place.dart';
 import 'package:favorite_places/providers/places_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddNewPlace extends ConsumerStatefulWidget {
-  const AddNewPlace({super.key});
+class AddPlaceScreen extends ConsumerStatefulWidget {
+  const AddPlaceScreen({super.key});
 
   @override
-  ConsumerState<AddNewPlace> createState() => _AddNewPlaceState();
+  ConsumerState<AddPlaceScreen> createState() => _AddPlaceScreenState();
 }
 
-class _AddNewPlaceState extends ConsumerState<AddNewPlace> {
+class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _titleController = TextEditingController();
 
-  void _addPlace() {
-    if (_titleController.text.length <= 3) {
+  void _savePlace() {
+    final enteredTitle = _titleController.text;
+    if (enteredTitle.isEmpty) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
         const SnackBar(
-          content: Text('Invalid input! title should be atleast 3 characters.'),
+          content: Text('Invalid input!'),
         ),
       );
       return;
     }
 
     ref
-        .read(placesProvider.notifier)
+        .read(userPlacesProvider.notifier)
         .addNewPlace(
-          Place(tilte: _titleController.text),
+          _titleController.text,
         );
 
     ScaffoldMessenger.of(
@@ -71,7 +71,7 @@ class _AddNewPlaceState extends ConsumerState<AddNewPlace> {
               height: 12,
             ),
             ElevatedButton(
-              onPressed: _addPlace,
+              onPressed: _savePlace,
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [

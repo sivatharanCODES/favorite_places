@@ -8,23 +8,19 @@ class PlaceDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget content = Center(
-      child: Container(
-        padding: const EdgeInsets.only(bottom: 50),
-        child: Text(
-          'No details found',
-          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-        ),
-      ),
-    );
     return Scaffold(
       appBar: AppBar(
         title: Text(place.tilte),
         backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       ),
-      body: content,
+      body: Center(
+        child: Text(
+          place.tilte,
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
+      ),
     );
   }
 }

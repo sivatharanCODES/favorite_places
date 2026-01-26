@@ -1,6 +1,6 @@
 import 'package:favorite_places/models/place.dart';
 import 'package:favorite_places/providers/places_provider.dart';
-import 'package:favorite_places/screens/add_new_place.dart';
+import 'package:favorite_places/screens/add_place.dart';
 import 'package:favorite_places/widgets/places_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,7 +10,7 @@ class PlacesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<Place> allPlaces = ref.watch(placesProvider);
+    List<Place> userPlaces = ref.watch(userPlacesProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -24,7 +24,7 @@ class PlacesScreen extends ConsumerWidget {
                 Navigator.of(
                   context,
                 ).push(
-                  MaterialPageRoute(builder: (ctx) => const AddNewPlace()),
+                  MaterialPageRoute(builder: (ctx) => const AddPlaceScreen()),
                 );
               },
               icon: const Icon(
@@ -34,7 +34,7 @@ class PlacesScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: PlacesList(places: allPlaces),
+      body: PlacesList(places: userPlaces),
     );
   }
 }
