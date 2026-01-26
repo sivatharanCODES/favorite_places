@@ -22,11 +22,14 @@ class PlacesList extends StatelessWidget {
       );
     }
     return ListView.builder(
-      itemBuilder: (context, index) {
+      itemBuilder: (ctx, index) {
         return ListTile(
           key: ValueKey(places[index].id),
           title: Text(
             places[index].tilte,
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
           ),
           onTap: () => {
             Navigator.of(context).push(
