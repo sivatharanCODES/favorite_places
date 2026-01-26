@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class PlacesNotifier extends StateNotifier<List<Place>> {
   PlacesNotifier()
     : super([
-        const Place(id: '1', tilte: 'Office'),
-        const Place(id: '2', tilte: 'Gym'),
+        Place(tilte: 'Office'),
+        Place(tilte: 'Gym'),
       ]);
 
   void addNewPlace(Place place) {

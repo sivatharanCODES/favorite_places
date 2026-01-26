@@ -1,5 +1,9 @@
+import 'package:uuid/uuid.dart';
+
+const uuid = Uuid();
+
 class Place {
-  const Place({required this.id, required this.tilte});
+  Place({required this.tilte}) : id = uuid.v4();
   final String id;
   final String tilte;
 }

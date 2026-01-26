@@ -28,7 +28,7 @@ class _AddNewPlaceState extends ConsumerState<AddNewPlace> {
     ref
         .read(placesProvider.notifier)
         .addNewPlace(
-          Place(id: DateTime.now().toString(), tilte: _titleController.text),
+          Place(tilte: _titleController.text),
         );
 
     ScaffoldMessenger.of(

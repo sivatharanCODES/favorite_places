@@ -57,7 +57,7 @@ class PlacesScreenList extends ConsumerWidget {
                 Navigator.of(
                   context,
                 ).push(
-                  MaterialPageRoute(builder: (ctx) => AddNewPlace()),
+                  MaterialPageRoute(builder: (ctx) => const AddNewPlace()),
                 );
               },
               icon: const Icon(
