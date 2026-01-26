@@ -55,8 +55,8 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
         title: const Text('Add new Place'),
         backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             TextField(
@@ -71,7 +71,7 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
             const SizedBox(
               height: 10,
             ),
-            ImageInput(),
+            const ImageInput(),
             const SizedBox(
               height: 12,
             ),
