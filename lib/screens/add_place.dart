@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:favorite_places/models/place.dart';
 import 'package:favorite_places/providers/places_provider.dart';
 import 'package:favorite_places/widgets/image_input.dart';
 import 'package:favorite_places/widgets/location_input.dart';
@@ -16,10 +17,13 @@ class AddPlaceScreen extends ConsumerStatefulWidget {
 class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _titleController = TextEditingController();
   File? _selectedImage;
+  PlaceLocation? _selectedLocation;
 
   void _savePlace() {
     final enteredTitle = _titleController.text;
-    if (enteredTitle.isEmpty || _selectedImage == null) {
+    if (enteredTitle.isEmpty ||
+        _selectedImage == null ||
+        _selectedLocation == null) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
@@ -32,7 +36,11 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
 
     ref
         .read(userPlacesProvider.notifier)
-        .addNewPlace(_titleController.text, _selectedImage!);
+        .addNewPlace(
+          _titleController.text,
+          _selectedImage!,
+          _selectedLocation!,
+        );
 
     ScaffoldMessenger.of(
       context,
@@ -73,7 +81,11 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
             const SizedBox(
               height: 10,
             ),
-            const LocationInput(),
+            LocationInput(
+              onSelectLocation: (selectedlocation) {
+                _selectedLocation = selectedlocation;
+              },
+            ),
             const SizedBox(
               height: 10,
             ),
