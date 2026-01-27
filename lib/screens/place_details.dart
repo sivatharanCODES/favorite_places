@@ -13,13 +13,15 @@ class PlaceDetailsScreen extends StatelessWidget {
         title: Text(place.tilte),
         backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       ),
-      body: Center(
-        child: Text(
-          place.tilte,
-          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-            color: Theme.of(context).colorScheme.onSurface,
+      body: Stack(
+        children: [
+          Image.file(
+            place.image,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
           ),
-        ),
+        ],
       ),
     );
   }
