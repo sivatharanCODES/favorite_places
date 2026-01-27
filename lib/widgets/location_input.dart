@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 
 class LocationInput extends StatefulWidget {
@@ -13,35 +16,82 @@ class LocationInput extends StatefulWidget {
 class _LocationInput extends State<LocationInput> {
   Location? pickedLoaction;
   var _isGettingLocation = false;
+
+  Future<Map<String, dynamic>> getLocationAddress(
+    double latitude,
+    double longitude,
+  ) async {
+    final url =
+        'https://nominatim.openstreetmap.org/reverse'
+        '?format=json'
+        '&lat=$latitude'
+        '&lon=$longitude'
+        '&addressdetails=1';
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        // REQUIRED by Nominatim
+        'User-Agent': 'favorite_places',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return data['address'];
+    } else {
+      throw Exception('Failed to fetch address');
+    }
+  }
+
   void _getCurrentLocation() async {
     Location location = Location();
 
-    bool serviceEnabled;
-    PermissionStatus permissionGranted;
-    LocationData locationData;
-
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
+    try {
+      bool serviceEnabled = await location.serviceEnabled();
       if (!serviceEnabled) {
-        return;
+        serviceEnabled = await location.requestService();
+        if (!serviceEnabled) return;
       }
-    }
 
-    permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        return;
+      PermissionStatus permissionGranted = await location.hasPermission();
+      if (permissionGranted == PermissionStatus.denied) {
+        permissionGranted = await location.requestPermission();
+        if (permissionGranted != PermissionStatus.granted) return;
       }
+
+      setState(() {
+        _isGettingLocation = true;
+      });
+
+      final locationData = await location.getLocation();
+      final lat = locationData.latitude;
+      final lng = locationData.longitude;
+
+      final addressData = await getLocationAddress(lat!, lng!);
+
+      final address = [
+        addressData['road'],
+        addressData['city'],
+        addressData['postcode'],
+        addressData['country'],
+      ].where((e) => e != null).join(', ');
+
+      debugPrint(address);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Unable to get address. Please try again.'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+      debugPrint(error.toString());
+    } finally {
+      setState(() {
+        _isGettingLocation = false;
+      });
     }
-    setState(() {
-      _isGettingLocation = true;
-    });
-    locationData = await location.getLocation();
-    setState(() {
-      _isGettingLocation = false;
-    });
   }
 
   @override
