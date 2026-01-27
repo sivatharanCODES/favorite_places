@@ -17,8 +17,30 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInput extends State<LocationInput> {
-  PlaceLocation? pickedLoaction;
+  PlaceLocation? _pickedLoaction;
   var _isGettingLocation = false;
+  String get locationImage {
+    if (_pickedLoaction == null) {
+      return '';
+    }
+
+    final lat = _pickedLoaction!.latitude;
+    final lng = _pickedLoaction!.longitude;
+    final uri = Uri.https(
+      'maps.geoapify.com',
+      '/v1/staticmap',
+      {
+        'style': 'osm-bright-smooth',
+        'width': '600',
+        'height': '300',
+        'center': 'lonlat:$lng,$lat',
+        'zoom': '16',
+        'marker': 'lonlat:$lng,$lat;type:awesome;color:#d90000;size:x-large',
+        'apiKey': '1e6f6e759ae04c1d8ab596c93bc67a0a',
+      },
+    );
+    return uri.toString();
+  }
 
   Future<Map<String, dynamic>> getLocationAddress(
     double latitude,
@@ -84,13 +106,13 @@ class _LocationInput extends State<LocationInput> {
 
       debugPrint(address);
       setState(() {
-        pickedLoaction = PlaceLocation(
+        _pickedLoaction = PlaceLocation(
           latitude: lat,
           longitude: lng,
           address: address,
         );
       });
-      widget.onSelectLocation(pickedLoaction!);
+      widget.onSelectLocation(_pickedLoaction!);
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -115,6 +137,14 @@ class _LocationInput extends State<LocationInput> {
         color: Theme.of(context).colorScheme.onSurface,
       ),
     );
+    if (_pickedLoaction != null) {
+      previewContent = Image.network(
+        locationImage,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+      );
+    }
 
     if (_isGettingLocation) {
       previewContent = const CircularProgressIndicator();
