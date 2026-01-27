@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:favorite_places/models/place.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
@@ -14,7 +15,7 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInput extends State<LocationInput> {
-  Location? pickedLoaction;
+  PlaceLocation? pickedLoaction;
   var _isGettingLocation = false;
 
   Future<Map<String, dynamic>> getLocationAddress(
@@ -68,7 +69,9 @@ class _LocationInput extends State<LocationInput> {
       final lat = locationData.latitude;
       final lng = locationData.longitude;
 
-      final addressData = await getLocationAddress(lat!, lng!);
+      if (lat == null || lng == null) return;
+
+      final addressData = await getLocationAddress(lat, lng);
 
       final address = [
         addressData['road'],
@@ -78,6 +81,13 @@ class _LocationInput extends State<LocationInput> {
       ].where((e) => e != null).join(', ');
 
       debugPrint(address);
+      setState(() {
+        pickedLoaction = PlaceLocation(
+          latitude: lat,
+          longitude: lng,
+          address: address,
+        );
+      });
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
