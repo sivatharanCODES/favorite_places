@@ -49,8 +49,10 @@ class _MapScreenState extends State<MapScreen> {
         ),
         children: [
           TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'com.example.app',
+            urlTemplate:
+                'https://{s}.google.com/vt/lyrs=m&hl={hl}&x={x}&y={y}&z={z}',
+            additionalOptions: const {'hl': 'en'},
+            subdomains: const ['mt0', 'mt1', 'mt2', 'mt3'],
           ),
           MarkerLayer(
             markers: [
@@ -61,7 +63,11 @@ class _MapScreenState extends State<MapScreen> {
                 ),
                 width: 40,
                 height: 40,
-                child: const Icon(Icons.location_pin, color: Colors.red),
+                child: const Icon(
+                  Icons.location_pin,
+                  color: Colors.red,
+                  size: 50.0,
+                ),
               ),
             ],
           ),
