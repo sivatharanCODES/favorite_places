@@ -30,7 +30,7 @@ class PlacesList extends StatelessWidget {
             backgroundImage: FileImage(places[index].image),
           ),
           title: Text(
-            places[index].tilte,
+            places[index].title,
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
               color: Theme.of(context).colorScheme.onSurface,
             ),

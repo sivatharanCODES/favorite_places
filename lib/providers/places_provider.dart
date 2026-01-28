@@ -12,7 +12,7 @@ Future<Database> _getDatabase() async {
     path.join(dbPath, 'places.db'),
     onCreate: (db, version) {
       return db.execute(
-        'CREATE TABEL user_places(id TEXT PRIMARY KEY,title TEXT,image TEXT,lat REAL,lng REAL,address TEXT)',
+        'CREATE TABLE user_places(id TEXT PRIMARY KEY,title TEXT,image TEXT,lat REAL,lng REAL,address TEXT)',
       );
     },
     version: 1,
@@ -23,13 +23,38 @@ Future<Database> _getDatabase() async {
 class UserPlacesNotifier extends StateNotifier<List<Place>> {
   UserPlacesNotifier() : super(const []);
 
-  void addNewPlace(String tilte, File image, PlaceLocation location) async {
+  Future<void> loadPlaces() async {
+    final db = await _getDatabase();
+
+    final data = await db.query('user_places');
+    final places = data
+        .map(
+          (row) => Place(
+            id: row['id'] as String,
+            title: row['title'] as String,
+            image: File(row['image'] as String),
+            location: PlaceLocation(
+              latitude: row['lat'] as double,
+              longitude: row['lng'] as double,
+              address: row['address'] as String,
+            ),
+          ),
+        )
+        .toList();
+    state = places;
+  }
+
+  Future<void> addNewPlace(
+    String title,
+    File image,
+    PlaceLocation location,
+  ) async {
     final appDir = await syspath.getApplicationDocumentsDirectory();
     final filename = path.basename(image.path);
     final copiedImage = await image.copy('${appDir.path}/$filename');
 
     final newPlace = Place(
-      tilte: tilte,
+      title: title,
       image: copiedImage,
       location: location,
     );
@@ -37,7 +62,7 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
     final db = await _getDatabase();
     db.insert('user_places', {
       'id': newPlace.id,
-      'title': newPlace.tilte,
+      'title': newPlace.title,
       'image': newPlace.image.path,
       'lat': newPlace.location.latitude,
       'lng': newPlace.location.latitude,

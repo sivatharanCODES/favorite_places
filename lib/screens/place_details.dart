@@ -29,7 +29,7 @@ class PlaceDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(place.tilte),
+        title: Text(place.title),
         backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       ),
       body: Stack(
