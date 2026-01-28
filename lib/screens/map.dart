@@ -24,6 +24,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  LatLng? _pickedLoaction;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,13 +35,22 @@ class _MapScreenState extends State<MapScreen> {
         actions: [
           if (widget.isSelecting)
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pop(_pickedLoaction);
+              },
               icon: const Icon(Icons.save),
             ),
         ],
       ),
       body: FlutterMap(
         options: MapOptions(
+          onTap: !widget.isSelecting
+              ? null
+              : (tapPos, position) {
+                  setState(() {
+                    _pickedLoaction = position;
+                  });
+                },
           initialCenter: LatLng(
             widget.location.latitude,
             widget.location.longitude,
@@ -55,21 +65,25 @@ class _MapScreenState extends State<MapScreen> {
             subdomains: const ['mt0', 'mt1', 'mt2', 'mt3'],
           ),
           MarkerLayer(
-            markers: [
-              Marker(
-                point: LatLng(
-                  widget.location.latitude,
-                  widget.location.longitude,
-                ),
-                width: 40,
-                height: 40,
-                child: const Icon(
-                  Icons.location_pin,
-                  color: Colors.red,
-                  size: 50.0,
-                ),
-              ),
-            ],
+            markers: (_pickedLoaction == null && widget.isSelecting)
+                ? []
+                : [
+                    Marker(
+                      point:
+                          _pickedLoaction ??
+                          LatLng(
+                            widget.location.latitude,
+                            widget.location.longitude,
+                          ),
+                      width: 40,
+                      height: 40,
+                      child: const Icon(
+                        Icons.location_pin,
+                        color: Colors.red,
+                        size: 50.0,
+                      ),
+                    ),
+                  ],
           ),
         ],
       ),
